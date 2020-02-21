@@ -119,7 +119,7 @@ class Player:
         self.listener = tf.TransformListener()
 
         self.m = Marker(ns=self.player_name, id=0, type=Marker.TEXT_VIEW_FACING, action=Marker.ADD)
-        self.m.header.frame_id = "moliveira"
+        self.m.header.frame_id = "dalmeida"
         self.m.header.stamp = rospy.Time.now()
         self.m.pose.position.y = 1
         self.m.pose.orientation.w = 1.0
@@ -166,8 +166,8 @@ class Player:
 
         max_vel, max_angle = msg.turtle, math.pi / 30
 
-        if msg.green_alive:  # PURSUIT MODE: Follow any green player (only if there is at least one green alive)
-            target = msg.green_alive[0]  # select the first alive green player (I am hunting green)
+        if msg.red_alive:  # PURSUIT MODE: Follow any green player (only if there is at least one green alive)
+            target = msg.red_alive[0]  # select the first alive green player (I am hunting green)
             distance, angle = getDistanceAndAngleToTarget(self.listener,
                                                           self.player_name, target)
 
@@ -195,8 +195,8 @@ class Player:
 
 
 def main():
-    rospy.init_node('moliveira', anonymous=False)
-    player = Player('moliveira')
+    rospy.init_node('dalmeida', anonymous=False)
+    player = Player('dalmeida')
     rospy.spin()
 
 
