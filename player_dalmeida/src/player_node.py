@@ -17,6 +17,7 @@ from geometry_msgs.msg import Transform, Quaternion
 import numpy as np
 
 from visualization_msgs.msg import Marker
+from rws2020_msgs.srv import Warp, WarpResponse
 
 
 def getDistanceAndAngleToTarget(tf_listener, my_name, target_name,
@@ -161,11 +162,21 @@ class Player:
         randomizePlayerPose(self.transform)
 
         rospy.Subscriber("make_a_play", MakeAPlay, self.makeAPlayCallBack)  # Subscribe make a play msg
-        from rws2020_msgs.srv import Warp, WarpResponse
-        self.warp_server = rospy.Service('warp', Warp, self.warpServiceCallback) #start ther server
+        #from rws2020_msgs.srv import Warp, WarpResponse
+        self.warp_server = rospy.Service('~warp', Warp, self.warpServiceCallback) #start ther server
 
     def warpServiceCallback(self, req):
-        rospy.loginfo("someone called service for " + req.player)
+        rospy.loginfo("someone called to x={} y={}".format(req.x, req.y))
+
+        quat = (0,0,0,1)
+        trans = (req.x,req.y,0)
+        self.br.sendTransform(trans, quat, rospy.Time.now(), self.player_name, "world")
+
+        response = WarpResponse()
+        #response.x = 0
+        #response.y = 0
+        response.success = True
+        return response
 
     def makeAPlayCallBack(self, msg):
 
